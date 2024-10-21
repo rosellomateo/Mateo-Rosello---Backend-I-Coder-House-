@@ -20,11 +20,15 @@ ProductRouter.get("/",async (req,res)=>{
 
 ProductRouter.get("/:pid",async (req,res)=>{
     res.setHeader('Content-type','application/json')
+    
     let productId = req.params.pid
+    
     productId = Number(productId)
+    
     if(isNaN(productId)){
         return res.status(400).json({status:"error",error:"Incorrect data type"})
     }
+
     try {
         let productDb = await ProductManager.getProductById(productId)
         if(!productDb){
@@ -90,7 +94,6 @@ ProductRouter.post("/",async (req,res)=>{
         return res.status(400).json({ status: "error", error: "All fields are required and must be valid" })
     }
     
-
     try{
         let productDb = await ProductManager.getProduct(title,code)
         if(productDb){
@@ -110,15 +113,6 @@ ProductRouter.post("/",async (req,res)=>{
 ProductRouter.put("/:pid", async (req,res)=>{
     let { title, description, code, price, status, stock, category, thumbnails } = req.body
     let productId = req.params.pid
-    console.log(productId)
-    console.log(title)
-    console.log(description)
-    console.log(code)
-    console.log(price)
-    console.log(status)
-    console.log(stock)
-    console.log(category)
-    console.log(thumbnails)
 
     productId = Number(productId)
     if(isNaN(productId)){
@@ -145,18 +139,22 @@ ProductRouter.put("/:pid", async (req,res)=>{
 
 ProductRouter.delete("/:pid", async (req,res)=>{
     let productId = req.params.pid
+    
     productId = Number(productId)
+    
     if(isNaN(productId)){
         res.setHeader('Content-type','application/json')
         return res.status(400).json({status:"error",error:"Incorrect data type"})
     }
+    
     let productDb = await ProductManager.getProductById(productId)
+
     if(!productDb){
         res.setHeader('Content-type','application/json')
         return res.status(404).json({status:"error",error:"product not found"})
     }
+
     try{
-        
         ProductManager.deleteProduct(productId)
         res.setHeader('Content-type','application/json')
         return res.status(200).json({status:"success",message:"product delete"})
