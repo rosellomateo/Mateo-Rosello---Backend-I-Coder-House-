@@ -108,8 +108,18 @@ ProductRouter.post("/",async (req,res)=>{
 })
 
 ProductRouter.put("/:pid", async (req,res)=>{
-    const { title, description, code, price, status, stock, category, thumbnails } = req.body
+    let { title, description, code, price, status, stock, category, thumbnails } = req.body
     let productId = req.params.pid
+    console.log(productId)
+    console.log(title)
+    console.log(description)
+    console.log(code)
+    console.log(price)
+    console.log(status)
+    console.log(stock)
+    console.log(category)
+    console.log(thumbnails)
+
     productId = Number(productId)
     if(isNaN(productId)){
         res.setHeader('Content-type','application/json')
@@ -117,16 +127,19 @@ ProductRouter.put("/:pid", async (req,res)=>{
     }
     
     try{
-        let productDb = await ProductManager.getProduct(title,code)
+        let productDb = await ProductManager.getProductById(productId)
+        console.log(`productoDb: ${productDb}`)
         if(!productDb){
             res.setHeader('Content-type','application/json')
-            res.status(404).json({})
+            res.status(404).json({status:"error",error:"product not exist"})
         }
-        ProductManager.updateProduct(productId,title,description,code,price,status,stock,category,thumbnails)
+        await ProductManager.updateProduct(productId,title,description,code,price,status,stock,category,thumbnails)
+        
         res.setHeader('Content-type','application/json')
         return res.status(200).json({status:"success",message:"product update"})
     }catch(error){
-        error500(res,error)
+        res.setHeader('Content-type','application/json')
+        return res.status(500).json({status:"error",error:`error to delete product: ${error}`})
     }
 })
 

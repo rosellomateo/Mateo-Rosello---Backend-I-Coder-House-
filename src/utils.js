@@ -1,5 +1,5 @@
 const error500 = (res,error)=>{
-    console.error(`error: ${error}`)
+    console.error(`error utils: ${error}`)
     res.setHeader('Content-type','application-json')
     return res.status(500).json({status:"error",error:"error to delete product"})
 }

@@ -68,8 +68,10 @@ class ProductManager {
         await this.#checkFileExistsAndLoad()
 
         let product = this.#products.find(p => p.id === id)
+        console.log("update product")
         if (!product) {
             console.error(`Product ${id} not found.`)
+            
             return
         }
 

@@ -11,8 +11,7 @@ const CartRouter = express.Router()
 CartRouter.post("/",async(req,res)=>{
     let idCart = await CartManager.newCart()
     res.setHeader('Content-type','application/json')
-    console.log(`creo el carrito ${idCart}`)
-    res.redirect(301,`/${idCart}`)
+    res.status(201).json({status:"success",message:`Create Cart ${idCart}`})
 })
 
 CartRouter.get("/:cid",async(req,res)=>{
@@ -45,17 +44,11 @@ CartRouter.post("/:cid/product/:pid",async(req,res)=>{
             res.setHeader('Content-type','application-json')
             return res.status(400).json({ status: "error", error: "productId is NaN" })
         }
-        
-        let productDb = ProductManager.getProductById(productId)
-        if(!productDb){
-            res.setHeader('Content-type','application-json')
-            return res.status(404).json({ status: "error", error: "product not exists" })
-        }
-
         await CartManager.addProduct(cartId,productId)
         return res.status(200).json({status:"sucess",mesmessage:"product add"})
     }catch(error){
-        error500(res,error)
+        res.setHeader('Content-type','application-json')
+        return res.status(500).json({status:"error",error:"error to delete product"})
     }
 })
 

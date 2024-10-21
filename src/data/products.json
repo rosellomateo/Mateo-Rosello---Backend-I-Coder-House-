@@ -26,5 +26,19 @@
       "https://example.com/images/auriculares_front.jpg",
       "https://example.com/images/auriculares_case.jpg"
     ]
+  },
+  {
+    "id": 3,
+    "title": "Teclado Mecánico RGB",
+    "description": "Teclado Mecánico RGB swithces blue",
+    "code": "TECLADO-MEC-RGB",
+    "price": 120,
+    "status": true,
+    "stock": 40,
+    "category": "accessories",
+    "thumbnails": [
+      "https://example.com/images/teclado_full.jpg",
+      "https://example.com/images/teclado_detail.jpg"
+    ]
   }
 ]

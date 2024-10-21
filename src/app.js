@@ -12,5 +12,5 @@ app.use("/api/products",ProductRouter)
 app.use("/api/carts",CartRouter)
 
 const server = app.listen(PORT,()=>{
-    console.log("Server escuchando")
+    console.log("Server start")
 })
