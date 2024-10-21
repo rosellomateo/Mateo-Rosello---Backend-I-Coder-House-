@@ -1,0 +1,30 @@
+[
+  {
+    "id": 1,
+    "title": "Smartphone Pro Max",
+    "description": "Smartphone con pantalla OLED de 6.7 pulgadas, cámara de 108MP y batería de larga duración.",
+    "code": "SMART-PRO-MAX",
+    "price": 999.99,
+    "status": true,
+    "stock": 50,
+    "category": "Smartphone",
+    "thumbnails": [
+      "https://example.com/images/smartphone_front.jpg",
+      "https://example.com/images/smartphone_back.jpg"
+    ]
+  },
+  {
+    "id": 2,
+    "title": "Auriculares Bluetooth",
+    "description": "Auriculares inalámbricos con cancelación de ruido y batería de 20 horas.",
+    "code": "AUR-BLUETOOTH",
+    "price": 150,
+    "status": false,
+    "stock": 0,
+    "category": "audio",
+    "thumbnails": [
+      "https://example.com/images/auriculares_front.jpg",
+      "https://example.com/images/auriculares_case.jpg"
+    ]
+  }
+]
