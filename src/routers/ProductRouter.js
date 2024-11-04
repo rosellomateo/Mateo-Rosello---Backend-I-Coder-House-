@@ -9,11 +9,11 @@ const ProductRouter = express.Router()
 ProductRouter.get("/",async (req,res)=>{
     try{
         let products = await ProductManager.getProducts()
-        res.status(200).send(products)
+        return res.status(200).send(products)
     }catch(error){
         console.error(`error: ${error}`)
         res.setHeader('Content-type','application/json')
-        res.status(500).json({status:"error", error:"error get products"})
+        return res.status(500).json({status:"error", error:"error get products"})
     }
     
 })
@@ -100,7 +100,6 @@ ProductRouter.post("/",async (req,res)=>{
             res.setHeader('Content-type','application/json')
             return res.status(400).send({status:"error",message:"Product exits"})
         }
-
         ProductManager.addProduct(title, description, code, price, status, stock, category, thumbnails)
         res.setHeader('Content-type','application/json')
         return res.status(201).send({status:"success",message:"product create"})

@@ -38,6 +38,7 @@ class ProductManager {
             this.#products.push(newProduct)
             await this.#updateFile()
             console.log(`Product ${title} saved.`)
+            return newProduct
         } catch (error) {
             console.error(`Error adding product: ${error}`)
         }

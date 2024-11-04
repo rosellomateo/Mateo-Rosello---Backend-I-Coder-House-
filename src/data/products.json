@@ -35,10 +35,16 @@
     "price": 120,
     "status": true,
     "stock": 40,
-    "category": "accessories",
-    "thumbnails": [
-      "https://example.com/images/teclado_full.jpg",
-      "https://example.com/images/teclado_detail.jpg"
-    ]
+    "category": "accessories"
+  },
+  {
+    "id": 4,
+    "title": "Samsung s24",
+    "description": "Samsung S24 2024",
+    "code": "asd232",
+    "price": 1300,
+    "status": true,
+    "stock": 5,
+    "category": "Smarphones"
   }
 ]
