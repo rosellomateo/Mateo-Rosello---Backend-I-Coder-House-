@@ -46,5 +46,25 @@
     "status": true,
     "stock": 5,
     "category": "Smarphones"
+  },
+  {
+    "id": 5,
+    "title": "Iphone 16",
+    "description": "Iphone 16 5,6 pulgadas 2k",
+    "code": "asd23143",
+    "price": 1000,
+    "status": true,
+    "stock": 5,
+    "category": "Apple"
+  },
+  {
+    "id": 6,
+    "title": "Celular Xiaomi",
+    "description": "Celular nuevo 2222",
+    "code": "XIAO231",
+    "price": 400,
+    "status": true,
+    "stock": 3,
+    "category": "Celular"
   }
 ]

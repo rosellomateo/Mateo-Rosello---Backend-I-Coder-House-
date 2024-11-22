@@ -5,7 +5,7 @@ const productsDiv = document.getElementById("products-div");
 const renderProduct = (product) =>{
     const productDiv = document.createElement("div")
     productDiv.innerHTML = `
-        <h3>${product.id}: ${product.title}</h3>
+        <h3>${product.title}</h3>
         <p>${product.description}</p>
         <p>Code: ${product.code}</p>
         <p>Price: $${product.price.toFixed(2)}</p>

@@ -1,14 +1,28 @@
 const express = require("express")
-const ProductManager = require("../models/ProductManager")
+const ProductManager = require("../services/ProductManager")
 const error500  = require("../utils")
 
-ProductManager.setPath("./src/data/products.json")
 
 const ProductRouter = express.Router()
 
 ProductRouter.get("/",async (req,res)=>{
     try{
-        let products = await ProductManager.getProducts()
+        let { limit = 10, page = 1, query, sort } = req.query
+        let filter = {}
+        limit = Number(limit)
+        page  = Number(page)
+        
+        if(isNaN(limit) || limit<0 || limit>10)
+            limit = 10
+        
+        if(isNaN(page) || page<0)
+            page = 1
+        
+        if(limit){
+            filter = {limit:1}
+        }
+
+        let products = await ProductManager.getProductsFilter({})
         return res.status(200).send(products)
     }catch(error){
         console.error(`error: ${error}`)
@@ -22,12 +36,6 @@ ProductRouter.get("/:pid",async (req,res)=>{
     res.setHeader('Content-type','application/json')
     
     let productId = req.params.pid
-    
-    productId = Number(productId)
-    
-    if(isNaN(productId)){
-        return res.status(400).json({status:"error",error:"Incorrect data type"})
-    }
 
     try {
         let productDb = await ProductManager.getProductById(productId)

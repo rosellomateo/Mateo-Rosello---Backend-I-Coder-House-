@@ -1,8 +1,6 @@
 const express = require("express")
-const ProductManager = require("../models/ProductManager")
+const ProductManager = require("../services/ProductManager")
 const error500  = require("../utils")
-
-ProductManager.setPath("./src/data/products.json")
 
 const VistasRouter = express.Router()
 
@@ -14,6 +12,7 @@ VistasRouter.get("/",async (req,res) =>{
 
 VistasRouter.get("/realtimeproducts",async (req,res)=>{
     let productsDb = await ProductManager.getProducts()
+    console.log(productsDb)
     res.render("realTimeProducts", { products: productsDb })
     io = req.io
     io.on("connection",socket=>{

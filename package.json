@@ -17,6 +17,9 @@
   "dependencies": {
     "express": "^4.21.1",
     "express-handlebars": "^8.0.1",
+    "mongoose": "^8.8.1",
+    "mongoose-paginate-v2": "^1.8.5",
+    "moongose": "^1.0.0",
     "socket.io": "^4.8.1",
     "tailwindcss": "^3.4.14"
   }

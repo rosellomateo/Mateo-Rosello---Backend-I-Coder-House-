@@ -1,26 +1,27 @@
 const express = require("express")
-const CartManager = require("../models/CartManager")
-const ProductManager = require("../models/ProductManager")
+const CartManager = require("../services/CartManager")
+const ProductManager = require("../services/ProductManager")
 const error500  = require("../utils")
-
-CartManager.setPath("./src/data/carts.json")
-ProductManager.setPath("./src/data/products.json")
 
 const CartRouter = express.Router()
 
 CartRouter.post("/",async(req,res)=>{
-    let idCart = await CartManager.newCart()
-    res.setHeader('Content-type','application/json')
-    res.status(201).json({status:"success",message:`Create Cart ${idCart}`})
+    try {
+        console.log("cart")
+        let cart = await CartManager.newCart()
+        let cartId = cart.id
+        console.log("ya tiene id")
+        res.setHeader('Content-type','application/json')
+        console.log(cart.id)
+        return res.status(201).json({status:"success",message:`Create Cart ${cartId}`})
+    } catch (error) {
+        error500(res,error)
+    }
 })
 
 CartRouter.get("/:cid",async(req,res)=>{
     try {
-        const cartId = Number(req.params.cid)
-        if (isNaN(cartId)) {
-            res.setHeader('Content-type','application-json')
-            return res.status(400).json({ status: "error", error: "cartId is NaN" })
-        }
+        const cartId = req.params.cid
         const cart = await CartManager.getCartById(cartId)
         if (!cart) {
             res.setHeader('Content-type','application-json')
@@ -34,21 +35,28 @@ CartRouter.get("/:cid",async(req,res)=>{
 
 CartRouter.post("/:cid/product/:pid",async(req,res)=>{
     try{
-        let cartId = Number(req.params.cid)
-        let productId = Number(req.params.pid)
-        if (isNaN(cartId)) {
-            res.setHeader('Content-type','application-json')
-            return res.status(400).json({ status: "error", error: "cartId is NaN" })
+        let cartId = req.params.cid
+        let cartDb = await CartManager.getCartById(cartId)
+        
+        if(!cartDb){
+            res.setHeader('Content-Type', 'application/json');
+            return res.status(404).json({error:"cart not exist"})
         }
-        if (isNaN(productId)) {
-            res.setHeader('Content-type','application-json')
-            return res.status(400).json({ status: "error", error: "productId is NaN" })
+
+        let productId = req.params.pid
+        console.log(productId)
+        
+        let productDb = await ProductManager.getProductById(productId)
+        console.log(productDb)
+        if(!productDb){
+            res.setHeader('Content-Type', 'application/json');
+            return res.status(404).json({error:"product not exist"})
         }
+
         await CartManager.addProduct(cartId,productId)
-        return res.status(200).json({status:"sucess",mesmessage:"product add"})
+        return res.status(200).json({status:"sucess",message:"product add"})
     }catch(error){
-        res.setHeader('Content-type','application-json')
-        return res.status(500).json({status:"error",error:"error to delete product"})
+        error500(res,error)
     }
 })
 
