@@ -33,7 +33,7 @@ CartRouter.get("/:cid",async(req,res)=>{
     }
 })
 
-CartRouter.post("/:cid/product/:pid",async(req,res)=>{
+CartRouter.post("/:cid/products/:pid",async(req,res)=>{
     try{
         let cartId = req.params.cid
         let cartDb = await CartManager.getCartById(cartId)
@@ -56,6 +56,51 @@ CartRouter.post("/:cid/product/:pid",async(req,res)=>{
         await CartManager.addProduct(cartId,productId)
         return res.status(200).json({status:"sucess",message:"product add"})
     }catch(error){
+        error500(res,error)
+    }
+})
+
+CartRouter.delete("/:cid/products/:pid",async (req,res)=>{
+    try{
+        let idCart    = req.params.cid
+        let idProduct = req.params.pid
+
+        let cartDb = CartManager.getCartById(idCart)
+        if (!cartDb){
+            res.setHeader('Content-Type', 'application/json')
+            return res.status(404).send({status:'error', message:'cart not exist'})
+        }
+
+        let productDb = ProductManager.getProductById(idProduct)
+        if(!productDb){
+            res.setHeader('Content-Type', 'application/json')
+            return res.status(404).send({status:'error', message:'product not exist'})
+        }
+        cartDb.products.find(p=> p.idProduct === idProduct)
+    }catch(error){
+        error500(res,error)
+    }
+        
+})
+
+CartRouter.delete("/:cid",async(req,res)=>{
+    try {
+        let idCart = req.params.cid
+    
+        let cartDb = CartManager.getCartById(idCart)
+        if (!cartDb){
+            res.setHeader('Content-Type', 'application/json')
+            return res.status(404).send({status:'error', message:'cart not exist'})
+        }
+
+        let productDb = ProductManager.getProductById(idProduct)
+        if(!productDb){
+            res.setHeader('Content-Type', 'application/json')
+            return res.status(404).send({status:'error', message:'product not exist'})
+        }
+        
+
+    } catch (error) {
         error500(res,error)
     }
 })

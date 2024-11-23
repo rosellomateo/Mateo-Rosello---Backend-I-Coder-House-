@@ -45,9 +45,10 @@ submitButton.addEventListener("click", () => {
 })
 
 socket.on("initialProducts", (products) => {
-    products.forEach(renderProduct)
+    products.forEach((p)=>renderProduct(p))
 })
 
 socket.on("newProduct", (product) => {
+    console.log("new product")
     renderProduct(product)
 })

@@ -31,6 +31,12 @@ class CartManager{
         return await cartModel.findById(idCart)
     }
 
+    static async deleteProduct(idCart,idProducts){
+        return await cartModel.updateOne()
+    } 
+    static async clearCart(idCart){
+        return await cartModel.updateOne({_id:idCart},{products:[]})
+    }
 }
 
 module.exports = CartManager
