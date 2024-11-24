@@ -1,0 +1,31 @@
+<div class="container">
+  <h1>Cart Details</h1>
+  {{#if products.length}}
+    <table>
+      <thead>
+        <tr>
+          <th>Title</th>
+          <th>Price</th>
+          <th>Quantity</th>
+          <th>Subtotal</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each products}}
+          <tr>
+            <td>{{idProduct.title}}</td>
+            <td>${{idProduct.price}}</td>
+            <td>{{quantity}}</td>
+            <td>${{multiply idProduct.price quantity}}</td>
+          </tr>
+        {{/each}}
+      </tbody>
+    </table>
+    <div class="btn">
+      <a href="/">products</a>
+    </div>
+  {{else}}
+    <p class="empty">No products in this cart.</p>
+  {{/if}}
+</div>
+<link rel="stylesheet" href="/css/stylesCart.css">

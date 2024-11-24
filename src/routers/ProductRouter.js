@@ -12,22 +12,49 @@ ProductRouter.get("/",async (req,res)=>{
         limit = Number(limit)
         page  = Number(page)
         
-        if(isNaN(limit) || limit<0 || limit>10)
+        if(isNaN(limit) || limit<0)
             limit = 10
         
         if(isNaN(page) || page<0)
             page = 1
         
-        if(limit){
-            filter = {limit:1}
+         
+        if (query) {
+            const [key, value] = query.split(":")
+            console.log(key)
+            console.log(value)
+            if (key && value !== undefined) {
+                if (key === "price" || key === "stock") {
+                    filter[key] = Number(value)
+                } else if (key === "status") {
+                    filter[key] = value === "true"
+                } else {
+                    filter[key] = { $regex: value, $options: "i" }
+                }
+            }
         }
 
-        let products = await ProductManager.getProductsFilter({})
-        return res.status(200).send(products)
-    }catch(error){
-        console.error(`error: ${error}`)
+        if(sort!='asc' || sort!='asc'){
+            sort = undefined
+        }
+
+        let result = await ProductManager.getProductsFilter(limit,page,filter,sort)
+
         res.setHeader('Content-type','application/json')
-        return res.status(500).json({status:"error", error:"error get products"})
+        return res.status(200).json({
+            status: "success",
+            payload: result.docs, 
+            totalPages: result.totalPages, 
+            prevPage: result.page - 1,
+            nextPage: result.page + 1, 
+            page: result.page, 
+            hasPrevPage: result.page > 1,
+            hasNextPage: result.page < result.totalPages,
+            prevLink: result.page > 1 ? `/api/products?page=${result.page - 1}&limit=${limit}` : null, 
+            nextLink: result.page < result.totalPages ? `/api/products?page=${result.page + 1}&limit=${limit}` : null
+        })
+    }catch(error){
+       error500(res,error)
     }
     
 })

@@ -1,32 +1,52 @@
 const socket = io()
-const submitButton = document.getElementById("submit-product");
-const productsDiv = document.getElementById("products-div");
+const submitButton = document.getElementById("submit-product")
+const productsDiv = document.getElementById("products-div")
 
 const renderProduct = (product) =>{
     const productDiv = document.createElement("div")
+    console.log(product)
     productDiv.innerHTML = `
         <h3>${product.title}</h3>
-        <p>${product.description}</p>
         <p>Code: ${product.code}</p>
-        <p>Price: $${product.price.toFixed(2)}</p>
+        <p>${product.description}</p>
+        <p>Price:${product.price} </p>
+        <p>Status: ${product.status ? "Available" : "Out of Stock"}</p>
         <p>Stock: ${product.stock}</p>
         <p>Category: ${product.category}</p>
-        <p>Status: ${product.status ? "Available" : "Out of Stock"}</p>
-        ${product.thumbnails && product.thumbnails.length ? `<img src="${product.thumbnails[0]}" alt="Product Image">` : ""}
-        <hr>
     `
     productsDiv.appendChild(productDiv)
 }
 
+const resetFields = () => {
+    document.getElementById("title").value = ''
+    document.getElementById("description").value = ''
+    document.getElementById("code").value = ''
+    document.getElementById("price").value = ''
+    document.getElementById("stock").value = ''
+    document.getElementById("category").value = ''
+    document.getElementById("status").checked = false
+}
+
 
 submitButton.addEventListener("click", () => {
-        const title = document.getElementById("title").value;
-        const description = document.getElementById("description").value;
-        const code = document.getElementById("code").value;
-        const price = parseFloat(document.getElementById("price").value);
-        const status = document.getElementById("status").checked;
-        const stock = parseInt(document.getElementById("stock").value);
-        const category = document.getElementById("category").value;
+        const title = document.getElementById("title").value
+        const description = document.getElementById("description").value
+        const code = document.getElementById("code").value
+        const price = parseFloat(document.getElementById("price").value)
+        const status = document.getElementById("status").checked
+        const stock = parseInt(document.getElementById("stock").value)
+        const category = document.getElementById("category").value
+        
+        if (
+            !title || !description || !code || isNaN(price) || isNaN(stock) || !category ||
+            title === '' || description === '' || code === '' || !price || stock === null || category === ''
+        ) {
+            Swal.fire({
+                icon: "error",
+                title: "Complete the fields"})
+                resetFields()
+            return
+        }
 
         const newProduct = {
             title,
@@ -37,18 +57,25 @@ submitButton.addEventListener("click", () => {
             stock,
             category
         }
-    
+
         socket.emit("newProduct", newProduct)
+        
+        socket.once("productExists", (message) => {
+            Swal.fire({
+                icon: "error",
+                title: "Error",
+                text: message
+            })
+            resetFields()
+        })
     
-        Swal.fire("Success!", "Product added successfully.", "success")
-        document.getElementById("product-form").reset()
-})
-
-socket.on("initialProducts", (products) => {
-    products.forEach((p)=>renderProduct(p))
-})
-
-socket.on("newProduct", (product) => {
-    console.log("new product")
-    renderProduct(product)
+        socket.once("productAdded", (product) => {
+            Swal.fire({
+                icon: "success",
+                title: "Success!",
+                text: "Product added successfully."
+            })
+            renderProduct(product)
+            resetFields()
+        })
 })

@@ -45,14 +45,18 @@ class ProductManager {
         }
     }
 
-    static async getProductsFilter(filter){
+    static async getProductsFilter(limit,page,query,sort){
         try {
-            let productsDb = await productModel.find(filter)
-            if (productsDb) {
-                return productsDb
-            }else{
-                return []
+            const filter = {
+                limit: limit,
+                page: page,
+                sort: sort,
+                lean: true
             }
+            let productsDb = await productModel.paginate(query,filter)
+            
+            return productsDb || []
+            
         } catch (error) {
             console.error(`Error get product: ${error}`)
         }
@@ -60,11 +64,13 @@ class ProductManager {
 
     static async getProductById(id) {
         try {
-            let productDb =  await productModel.findById(id)
-            if (!productDb) {
-                console.error(`Product ${id} not found.`)
-                return
+            let productDb =  await productModel.findById(id).lean()
+            if(productDb){
+                productDb.price = productDb.price.toString()
+                productDb.price = parseFloat(productDb.price)
             }
+            
+
             return productDb
         } catch (error) {
             console.error(`error to get product by id : ${error}`)
@@ -74,7 +80,13 @@ class ProductManager {
 
     static async getProduct(title, code) {
         try {
-            let productDb = await productModel.findOne({title:title,code:code})
+            let productDb = await productModel.findOne({title:title,code:code}).lean()
+            
+            if(productDb){
+                productDb.price = productDb.price.toString()
+                productDb.price = parseFloat(productDb.price)
+            }
+            
             return productDb
         } catch (error) {
             console.error(error)
@@ -84,7 +96,7 @@ class ProductManager {
 
     static async updateProduct(id, title, description, code, price, status, stock, category, thumbnails) {
         try {
-            let productDb = await productModel.findById(id)
+            let productDb = await productModel.findById(id).lean()
 
             if (!product) {
                 console.error(`Product ${id} not found.`)

@@ -1,8 +1,10 @@
 const { Server } = require("socket.io")
+const ProductManager = require("../services/ProductManager")
 
-const io = (server) =>{
-    return new Server(server)
+webSocket = (server) => {
+    let io = new Server(server)
+    return io
 }
 
 
-module.exports = io
+module.exports = webSocket

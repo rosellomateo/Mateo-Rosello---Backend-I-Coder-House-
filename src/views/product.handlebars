@@ -1,0 +1,32 @@
+<div class="product-container">
+    <h2>{{title}}</h2>
+    <p><strong>Código:</strong> {{code}}</p>
+    <p><strong>Descripción:</strong> {{description}}</p>
+    <p><strong>Precio:</strong> ${{price}}</p>
+    <p><strong>Stock:</strong> {{stock}}</p>
+    <p><strong>Categoría:</strong> {{category}}</p>
+    <p class="{{#if status}}status-available{{else}}status-not-available{{/if}}">
+        <strong>Estado:</strong> {{#if status}}Disponible{{else}}Agotado{{/if}}
+    </p>
+
+    {{#if thumbnails}}
+    <h3>Imágenes del producto:</h3>
+    <div class="product-images">
+        {{#each thumbnails}}
+        <img src="{{this}}" alt="Imagen del producto">
+        {{/each}}
+    </div>
+    {{/if}}
+
+    <form id="add-to-cart-form">
+        <input type="hidden" name="productId" value="{{_id}}">
+        <label for="quantity">Cantidad:</label>
+        <input type="number" name="quantity" value="1" min="1" id="quantity" required>
+        <button type="submit">Agregar al carrito</button>
+    </form>
+
+    <a href="/products" class="back-link">Home</a>
+</div>
+<link rel="stylesheet" href="/css/stylesProduct.css">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="/js/products.js"></script>

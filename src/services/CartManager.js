@@ -1,41 +1,74 @@
 const cartModel = require("../models/cartModel")
-const productModel = require("../models/productModel")
+const mongoose = require("mongoose")
 
 class CartManager{
     static async addProduct(idCart,idProduct){
-        let cartDb = await this.addProductgetCartById(idCart)
-        let products = cartDb.products
-        let productDb = products.find(p => p.idProduct === idProduct)
-        
-        if(productDb){
-            productDb.quantity++
-        }else{
-            let newProduct = {
-                idProduct: idProduct,
-                quantity: 1
+        try {
+            const result = await cartModel.updateOne( {_id: idCart, "products.idProduct": idProduct },{$inc: {"products.$.quantity": 1}})
+            if (result.matchedCount === 0) {
+                await cartModel.updateOne({_id: idCart },{$push: {products: { idProduct: idProduct,quantity: 1}}})
             }
-            
-            products.push(newProduct)
+            return result
+        } catch (error) {
+            console.error(`Error adding product to cart: ${error.message}`)
         }
-        return await cartModel.updateOne({_id:idCart},{products: products})
     }
 
     static async newCart(){
-        let newCart = {
-            products: []
+        try {
+            let newCart = {products: []}
+            return await cartModel.create(newCart)
+        } catch (error) {
+            console.error(`error to create Cart: ${error}`)
         }
-        return await cartModel.create(newCart)
+        
     }
     
     static async getCartById(idCart){
-        return await cartModel.findById(idCart)
+        try{
+            return await cartModel.findById(idCart).populate('products.idProduct').lean()
+        }catch(error){
+            console.error(`error to get Cart: ${error}`)
+        }
+        
     }
 
-    static async deleteProduct(idCart,idProducts){
-        return await cartModel.updateOne()
-    } 
+    static async updateCart(idCart,products){
+        try {
+            return await cartModel.updateOne({_id:idCart},{products: products})
+        } catch (error) {
+            console.error(`error to update products: ${error}`)
+        }
+    }
+
+    static async updateQuantity(idCart,idProduct,quantity){
+        try {
+            let result = await cartModel.findOne({_id:idCart,"products.idProduct": idProduct})
+            if(result){
+                return await cartModel.updateOne({_id:idCart,"products.idProduct": idProduct},{$set: {"products.$.quantity":quantity}})
+            }else{
+                return await cartModel.updateOne({_id:idCart},{$push:{products:{idProduct:idProduct,quantity:quantity}}})
+            }
+        } catch (error) {
+            console.error(`error to update products: ${error}`)
+        }
+    }
+
+    static async deleteProduct(idCart,idProduct){
+        try{
+            return await cartModel.updateOne({_id: idCart},{$pull: {products:{idProduct:new mongoose.Types.ObjectId(idProduct)}}})
+        }catch(error){
+            console.error(`error to delete product: ${error}`)
+        }
+    }
+
     static async clearCart(idCart){
-        return await cartModel.updateOne({_id:idCart},{products:[]})
+        try{
+            return await cartModel.updateOne({_id:idCart},{products:[]})
+        }catch(error){
+            console.error(`error to delete product: ${error}`)
+        }
+        
     }
 }
 

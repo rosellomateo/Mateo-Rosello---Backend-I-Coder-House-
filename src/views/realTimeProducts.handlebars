@@ -37,8 +37,8 @@
     {{#each products}}
         <div>
           <h3>{{this.title}}</h3>
+          <p>Code: {{this.code}}</p>
           <p>Description: {{this.description}}</p>
-          <p>{{this.code}}</p>
           <p>Price: ${{this.price}}</p>
           <p>Status:
             {{#if this.status}}Available{{else}}Not available{{/if}}</p>

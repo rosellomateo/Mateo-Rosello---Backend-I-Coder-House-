@@ -15,7 +15,7 @@ app.use(express.urlencoded({extended:true}))
 
 app.use(express.static("./src/public"))
 
-app.engine("handlebars", handlebars.engine())
+app.engine("handlebars",handlebars.engine({helpers: {multiply:(a, b) => a * b,},}))
 app.set("view engine", "handlebars")
 app.set("views", "./src/views")
 
