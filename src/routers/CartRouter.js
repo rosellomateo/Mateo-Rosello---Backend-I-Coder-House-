@@ -2,7 +2,7 @@ const express = require("express")
 const CartManager = require("../services/CartManager")
 const ProductManager = require("../services/ProductManager")
 const error500  = require("../utils")
-
+const mongoose = require('mongoose')
 const CartRouter = express.Router()
 
 CartRouter.post("/",async(req,res)=>{
@@ -69,17 +69,19 @@ CartRouter.put("/:cid",async (req,res)=>{
         }
 
         let products = req.body.products
+        console.log(products)
         if(!Array.isArray(products)){
             res.setHeader('Content-Type', 'application/json')
             return res.status(404).json({error:"is not array of products"})
         }
-        products.forEach(async p => {
-            let productDb = await ProductManager.getProductById(p.idProduct)
+
+        for (let i in products) {
+            let productDb = await ProductManager.getProductById(products[i].product)
             if(!productDb){
                 res.setHeader('Content-Type', 'application/json')
-                return res.status(404).json({error:`Product ${p.idProduct} not exist`})
+                return res.status(404).json({error:`Product ${products[i].product} not exist`})
             }
-        })
+        }
         
         let result = await CartManager.updateCart(idCart,products)
         res.setHeader('Content-Type', 'application/json')
@@ -103,6 +105,12 @@ CartRouter.put("/:cid/products/:pid",async (req,res)=>{
         if(!productDb){
             res.setHeader('Content-Type', 'application/json')
             return res.status(404).send({status:'error', message:'product not exist'})
+        }
+
+        let productCart = cartDb.products.find(p=>p.product.code === productDb.code)
+        if(!productCart){
+            res.setHeader('Content-Type', 'application/json')
+            return res.status(404).send({status:'error', message:'product not in cart'})
         }
         
         let quantity = req.body.quantity
@@ -137,7 +145,11 @@ CartRouter.delete("/:cid/products/:pid",async (req,res)=>{
             res.setHeader('Content-Type', 'application/json')
             return res.status(404).send({status:'error', message:'product not exist'})
         }
-        
+        let productCart = cartDb.products.find(p=>p.product.code === productDb.code)
+        if(!productCart){
+            res.setHeader('Content-Type', 'application/json')
+            return res.status(404).send({status:'error', message:'product not in cart'})
+        }
         let result = await CartManager.deleteProduct(idCart,idProduct)
         
         res.setHeader('Content-Type', 'application/json')

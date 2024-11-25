@@ -1,7 +1,14 @@
-<header><a href="/carts/674272d2251dc31ce00ab070" class="cart-icon">🛒</a></header>
+<header><a href="/carts/6744dd43f624c07112596661" class="cart-icon">🛒</a></header>
 
 <h1>Products</h1>
-<div class="products-container">
+<div class="sort-container">
+  <label for="sort-select">Sort by price:</label>
+  <select id="sort-select">
+    <option value="asc">Ascending</option>
+    <option value="desc">Descending</option>
+  </select>
+</div>
+<div id="products-container">
   {{#if products.length}}
     {{#each products}}
       <div class="product-card">
@@ -11,19 +18,21 @@
         <p>Code: {{this.code}}</p>
         <p>Price: ${{this.price}}</p>
         <p>Status:
-          <span class="{{#if this.status}}status-available{{else}}status-not-available{{/if}}">
+          <span>
             {{#if this.status}}Available{{else}}Not available{{/if}}
           </span>
         </p>
         <p>Stock: {{this.stock}}</p>
         <p>Category: {{this.category}}</p>
         </a>
-      </div>
+</div>
     {{/each}}
   {{else}}
     <p class="no-products">No products available</p>
   {{/if}}
-</div>
+  
+
 
 <link rel="stylesheet" href="/css/stylesHome.css">
-<script src="../public/js/products.js"></script>
+<script src="/socket.io/socket.io.js"></script> 
+<script src="/js/productsMenu.js"></script>

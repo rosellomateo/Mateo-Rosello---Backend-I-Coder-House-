@@ -10,8 +10,8 @@ VistasRouter.get("/",(req,res)=>{
 
 VistasRouter.get("/products",async (req,res) =>{
     try {
-        let productsDb = await ProductManager.getProducts()
-        res.render("home",{products: productsDb})
+        let {docs:products, totalPages, hasNextPage, hasPrevPage, prevPage, nextPage} = await ProductManager.getProducts()
+        res.render("home",{products,totalPages, hasNextPage, hasPrevPage, prevPage, nextPage})
     } catch (error) {
         error500(res,error)
     }

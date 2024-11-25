@@ -28,7 +28,7 @@ body {
     text-decoration: none; 
     color: inherit;
   }  
-  .products-container {
+  #products-container {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
     gap: 20px;
@@ -56,16 +56,6 @@ body {
     font-size: 0.9em;
     color: #555;
     margin: 5px 0;
-  }
-
-  .status-available {
-    color: #28a745;
-    font-weight: bold;
-  }
-
-  .status-not-available {
-    color: #dc3545;
-    font-weight: bold;
   }
 
   .product-images {

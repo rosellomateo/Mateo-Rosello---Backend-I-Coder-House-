@@ -2,7 +2,6 @@ const express = require("express")
 const ProductManager = require("../services/ProductManager")
 const error500  = require("../utils")
 
-
 const ProductRouter = express.Router()
 
 ProductRouter.get("/",async (req,res)=>{
@@ -12,7 +11,7 @@ ProductRouter.get("/",async (req,res)=>{
         limit = Number(limit)
         page  = Number(page)
         
-        if(isNaN(limit) || limit<0)
+        if(isNaN(limit) || limit<=0)
             limit = 10
         
         if(isNaN(page) || page<0)
@@ -21,8 +20,6 @@ ProductRouter.get("/",async (req,res)=>{
          
         if (query) {
             const [key, value] = query.split(":")
-            console.log(key)
-            console.log(value)
             if (key && value !== undefined) {
                 if (key === "price" || key === "stock") {
                     filter[key] = Number(value)
@@ -34,11 +31,12 @@ ProductRouter.get("/",async (req,res)=>{
             }
         }
 
-        if(sort!='asc' || sort!='asc'){
-            sort = undefined
+        let sortOption = 1
+        if(sort === 'desc'){
+            sortOption = -1
         }
 
-        let result = await ProductManager.getProductsFilter(limit,page,filter,sort)
+        const result = await ProductManager.getProductsFilter(filter,limit, page,sortOption)
 
         res.setHeader('Content-type','application/json')
         return res.status(200).json({

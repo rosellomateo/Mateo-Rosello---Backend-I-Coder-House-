@@ -34,7 +34,7 @@ class ProductManager {
 
     static async getProducts() {
         try {
-            let productsDb = await productModel.find().lean()
+            let productsDb = await productModel.paginate({},{lean:true,sort:{price:1}})
             if (productsDb) {
                 return productsDb
             }else{
@@ -45,18 +45,11 @@ class ProductManager {
         }
     }
 
-    static async getProductsFilter(limit,page,query,sort){
+    static async getProductsFilter(query,limit,page,sort){
         try {
-            const filter = {
-                limit: limit,
-                page: page,
-                sort: sort,
-                lean: true
-            }
-            let productsDb = await productModel.paginate(query,filter)
-            
+            let productsDb = await productModel.paginate(query,{lean:true,page,limit,sort:{price:sort}})
+            console.log(productsDb)
             return productsDb || []
-            
         } catch (error) {
             console.error(`Error get product: ${error}`)
         }
